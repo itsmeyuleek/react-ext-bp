@@ -4,4 +4,3 @@ import './index.css';
 import Options from './Options';
 
 ReactDOM.render(<Options />, document.getElementById('root'));
-

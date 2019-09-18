@@ -8,6 +8,8 @@ import { Button, Welcome } from '@storybook/react/demo';
 import Popup from '../src/popup/Popup';
 import Sidebar from '../src/sidebar/Sidebar';
 import Options from '../src/options/Options';
+// import Widgets from '../../extchrome/app/javascript/components/Widget'
+// import Colors from '../src/color-bar/Colors';
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
@@ -24,3 +26,4 @@ storiesOf('Button', module)
 storiesOf('Popup', module).add('Default', () => <Popup />);
 storiesOf('Sidebar', module).add('Default', () => <Sidebar />);
 storiesOf('Options', module).add('Default', () => <Options />);
+// storiesOf('Colors', module).add('Default', () => <Colors />);
