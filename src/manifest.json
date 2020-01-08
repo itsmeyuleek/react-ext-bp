@@ -27,7 +27,9 @@
   "permissions": [
     "http://myapi.com",
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "identity",
+    "identity.email"
   ],
   "icons": {
     "128": "img/icon.png"
