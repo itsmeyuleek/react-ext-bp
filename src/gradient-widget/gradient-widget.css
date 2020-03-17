@@ -1,14 +1,9 @@
 .Gradient {
-  width: 300px;
-  height: 300px;
-  background-color: #fbfbfb;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #f1f1f1;
-  margin-top: 420px;
-  margin-left: 30px;
-  position: absolute;
-  border-radius: 5px;
+  height: 175px;
+  position: relative;
+  background-color: #0F0F0F;
+  border-radius: 10px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,.3);
 }
 
 .colorBoxGradient {
@@ -19,11 +14,66 @@
   margin: 10px 0 5px 20px;
 }
 
-button, h1 {
-  margin: 20px;
+.Gradient > h1 {
+  position: relative;
+  top: 15px;
+  margin-left: 20px;
 }
 
-input {
-  margin: 10px 0 0 20px;
-  width: 60px;
+.Gradient > .sendButton, .randomButton {
+ padding: 5px;
+ background-color: rgba(0, 0, 0, 0);
+ border: 1px solid white;
+ outline: none;
+ bottom: 20px;
+
+ position: absolute;
+ bottom: 20px;
+}
+
+.Gradient > .sendButton {
+  left: 20px;
+}
+
+.Gradient > .randomButton {
+  left: 80px;
+}
+
+.Gradient > input {
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  color: white;
+  margin: 10px 0 20px 10px;
+  width: 75px;
+  outline: none;
+  font-size: 16px;
+  font-weight: 500;
+
+  position: absolute;
+  top: 45%;
+}
+
+.Gradient > input::placeholder {
+  color: white;
+}
+
+.Gradient > label {
+  position: absolute;
+  top: calc(45% + 12px);
+}
+
+#colorStartNumber {
+  left: 50px;
+}
+
+#colorStartNumberLabel {
+  left: 20px;
+}
+
+#colorEndNumber {
+  right: 20px;
+}
+
+#colorEndNumberLabel {
+  right: calc(20px + 70px + 20px);
 }

@@ -1,15 +1,30 @@
 import React from 'react'
 import $ from 'jquery'
 
+import ColorLibrarySquare from './ColorLibrarySquare'
+
 export default class ColorLibrary extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      name: props.name
-    }
+    this.componentDidUpdate = this.componentDidUpdate.bind(this)
+
+    props.where !== 'catalog' ?
+      this.state = {
+        where: props.where,
+        name: 'Color library',
+        description: 'Store colors from Color widget',
+        colors: props.widgetData.colors,
+      }
+    :
+      this.state = {
+        where: props.where,
+        name: 'Color library',
+        description: 'Store colors from Color widget',
+      }
 
     this.userId = 0
+    const self = this
     chrome.storage.sync.get(['userId'], function(result) {
       this.userId = result.userId
 
@@ -34,7 +49,6 @@ export default class ColorLibrary extends React.Component {
       });
 
       console.log('GET COLORS FOR LIBRARY')
-
       $.ajax({
         method: "POST",
         url: "http://localhost:3000/color_bar_library_widgets/retrieveColors",
@@ -44,38 +58,86 @@ export default class ColorLibrary extends React.Component {
         }
       })
       .done(function(data) {
-        console.log(data)
+        console.log('COLORS FOR LIBRARY', data)
         let result = data['result']
         if (result == '1') {
-          let colors = data['colors']
-          colors = colors.split(',')
-          console.log('COLOR FOR LIBRARY:', colors)
-          console.log('UPDATING WIDGET')
-          let id = 0
-          for (let el of colors) {
-            console.log(id, el)
-            let canv = $('<canvas class=\'SavedColor\' id=\'' + id + '\' style="background-color: ' + el + '">');
-            $("#SavedFromColorWidget").prepend(canv)
-            id = id + 1
+          if (data['colors'] !== null && data['colors'].length > 0) {
+            let colors = data['colors']
+            if (props.where !== 'catalog') {
+              self.setState({
+                colors: colors
+              })
+              self.props.addColorsToColorLibrary(colors)
+              self.props.resizeWidgets()
+            }
           }
         }
       });
     });
   }
 
+  componentDidUpdate() {
+    $.ajax({
+      method: "POST",
+      url: "http://localhost:3000/color_bar_library_widgets/addColor",
+      dataType: "json",
+      data: {
+        userId: userId,
+        colors: this.state.colors
+      }
+    })
+  }
+
   render() {
+    const { updateBind, data } = this.props
+    let rmBtnClass = ""
+    let addBtnClass = ""
+    if (data !== undefined) {
+      rmBtnClass = data.editable ? "removeButton is-active" : "removeButton"
+      addBtnClass = data.isBinded ? "addButton disabled" : "addButton enabled"
+    }
+
+    var colorSquares = []
+    if (this.state.where !== 'catalog') {
+      colorSquares = this.state.colors.slice(0).reverse().map((color, idx) => {
+        return <ColorLibrarySquare key={idx} idx={idx} color={color} deleteColorFromColorLibrary={this.props.deleteColorFromColorLibrary}/>
+      })
+    }
+
+
     return (
-      <div className="ColorLibrary">
-        <h1>Get {this.state.name}</h1>
-
-        <h2>Your colors from color widget</h2>
-
-        <div id="SavedFromColorWidget" className="SavedFromColorWidget">
-
+      this.state.where == 'catalog' ?
+      (
+       <div className="catalogEntry">
+         <h2>{this.state.name}</h2>
+         <p>{this.state.description}</p>
+         <button className={addBtnClass} disabled={data.isBinded} onClick={() => updateBind(true, 'ColorBarLibraryWidget')} />
+       </div>
+     ) :
+     (
+    //  <div className="widgetsGrid">
+    <div className="widgetWrapper">
+      <div
+        className="widget ColorLibrary"
+      >
+        <h1>{this.state.name}</h1>
+        <h2>
+          Your colors from color widget
+        </h2>
+        <button
+          className={rmBtnClass}
+          onClick={() => updateBind(false, 'ColorBarLibraryWidget')}
+        />
+        <div
+          id="SavedFromColorWidget"
+          className="SavedFromColorWidget"
+        >
+          {colorSquares}
         </div>
-
+      </div>
       </div>
 
     )
+  )
   }
 }

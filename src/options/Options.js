@@ -9,10 +9,15 @@ import './Options.css';
 import '../color-bar/color-bar.css';
 import '../gradient-widget/gradient-widget.css';
 import '../color-bar-library-widget/color-bar-library-widget.css';
+import '../associations-widget/associations-widget.css';
+import '../catalog/catalog.css';
+import '../widgets-grid.css';
 
 import Color from '../color-bar/Color.jsx';
 import Gradient from '../gradient-widget/GradientWidget.jsx';
 import ColorLibrary from '../color-bar-library-widget/ColorLibraryWidget.jsx';
+import Association from '../associations-widget/AssociationsWidget.jsx';
+import Catalog from '../catalog/Catalog.jsx';
 
 class Options extends Component {
   render() {
@@ -23,47 +28,32 @@ class Options extends Component {
 }
 
 const Colors = props => (
-  <div>
-    <Color name="Color"/>
-  </div>
+  //<div>
+    <Color />
+  //</div>
 )
 
 const Gradients = props => (
-  <div>
-    <Gradient name="Gradient"/>
-  </div>
+  //<div>
+    <Gradient />
+  //</div>
 )
 
 const ColorsLibrary = props => (
-  <div>
-    <ColorLibrary name="Color Library"/>
-  </div>
+  //<div>
+    <ColorLibrary />
+  //</div>
 )
 
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <Colors name="React1" />,
-    document.body.appendChild(document.createElement('div'))
-  )
-})
+const Associations = props => (
+  //<div>
+    <Association />
+  //</div>
+)
 
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <Gradients name="React2" />,
-    document.body.appendChild(document.createElement('div'))
-  )
-})
-
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <ColorsLibrary name="React3" />,
-    document.body.appendChild(document.createElement('div'))
-  )
-})
-
-function showCoords(event) {
-
-}
+const Catalogs = props => (
+  <Catalog />
+)
 
 let userId = 0
 

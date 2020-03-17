@@ -1,0 +1,121 @@
+.catalogWrapper {
+}
+
+.popButton {
+  position: fixed;
+  right: 37px;
+  bottom: 50px;
+  background: url('./plus.png') no-repeat;
+  background-size: 100%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: 0px;
+  outline: none;
+
+  transition: transform 0.5s ease;
+}
+
+.popButton.is-active {
+  transform: rotate(45deg);
+}
+
+.editButton {
+  position: fixed;
+  right: 37px;
+  bottom: 120px;
+  background: url('./edit.png') no-repeat;
+  background-size: 100%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: 0px;
+  outline: none;
+
+  transition: transform 0.5s ease;
+}
+
+.catalogEntry {
+  width: 410px;
+  height: 130px;
+  border-radius: 5px;
+  background-color: #272727;
+
+  position: relative;
+}
+
+.catalogEntry > h2 {
+  margin-left: 20px;
+}
+
+.catalogEntry > h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.catalogEntry > p {
+  margin-left: 20px;
+  font-size: 20px;
+  font-weight: normal;
+  color: #767676;
+  margin-top: 22px;
+}
+
+.catalogEntry > button {
+  /* background: url('./s_plus.png') no-repeat;
+  background-size: 100%;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+
+  position: absolute;
+  right: 20px;
+  top: 20px; */
+}
+
+.addButton {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+
+  /* filter: brightness(50%); */
+
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  outline: none;
+
+  transition: transform 0.5s ease;
+}
+
+.addButton.enabled {
+  background: url('./s_plus.png') no-repeat;
+  background-size: 100%;
+}
+
+.addButton.disabled {
+  background: url('./s_plus_inactive.png') no-repeat;
+  background-size: 100%;
+}
+
+.catalogList {
+  padding-top: 40px;
+  overflow-y: scroll;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 95vw;
+  height: 92vh;
+  background-color: black;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+
+  display: grid;
+  justify-content: center;
+  grid-template-rows: 130px;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  grid-template-columns: repeat(auto-fill, 410px);
+}

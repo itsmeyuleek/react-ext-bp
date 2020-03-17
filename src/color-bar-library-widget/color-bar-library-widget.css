@@ -1,19 +1,19 @@
 .ColorLibrary {
-  width: 310px;
-  height: 300px;
-  background-color: #fbfbfb;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #f1f1f1;
-  margin-top: 40px;
-  margin-left: 350px;
-  position: absolute;
-  border-radius: 5px;
+  position: relative;
+  background-color: #0F0F0F;
+  border-radius: 10px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,.3);
 }
 
 .SavedFromColorWidget{
-  padding: 0px;
-  margin-left: 20px;
+  padding-bottom: 20px;
+  margin: 0 0 20px 20px;
+}
+
+.ColorLibrarySquareWrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .SavedColor {
@@ -27,11 +27,71 @@
   border-color: #f1f1f1;
 }
 
-button, h1, h2, p {
+.DeleteColorButton {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  outline: none;
+  background: url('./x_button.png') no-repeat;
+  background-size: 100%;
+
+  display: none;
+}
+
+.DeleteColorButton.is-active {
+  display: inherit;
+}
+
+.ColorLibrary > h1 {
+  position: relative;
+  top: 15px;
+  margin-left: 20px;
+}
+
+.ColorLibrary > h2 {
+  font-size: 14px;
+  font-weight: normal;
+  position: relative;
+  margin: 35px 20px 20px 20px;
+  /* padding: 10px 0 25px 0; */
+}
+
+.ColorLibrary > p {
   margin: 20px;
 }
 
-input {
+.ColorLibrary > input {
   margin: 10px 0 0 20px;
   width: 60px;
+}
+
+.TextToCopy {
+  position: absolute;
+  left: -9999px;
+}
+
+.CopiedToClipboard {
+  display: none;
+  position: fixed;
+  left: 50%;
+  margin-left: -80px;
+  top: 5px;
+  width: 160px;
+  height: 50px;
+  z-index: 2;
+  position: fixed;
+  background-color: #343434;
+  text-align: center;
+
+  border-radius: 5px;
+  box-shadow: 0px 1px 7px rgba(0,0,0,.3)
+}
+
+.CopiedToClipboard > p {
+  position: relative;
+  transform: translateY(50%);
+  bottom: 10%;
 }

@@ -1,0 +1,79 @@
+.Associations {
+  /* background-color: #fbfbfb; */
+  position: relative;
+  background-color: #0F0F0F;
+  max-height: 350px;
+  border-radius: 10px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,.3);
+}
+
+.Associations div {
+  text-align: center;
+}
+
+.Associations > h1 {
+  position: relative;
+  top: 15px;
+  margin-left: 20px;
+}
+
+.Associations > input {
+  margin: 20px 20px 30px 20px;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  color: white;
+  margin: 10px 0 20px 20px;
+  width: 110px;
+  outline: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.Associations > input::placeholder {
+  color: white;
+}
+
+.Associations > .sendButton {
+  padding: 5px;
+  margin-left: 40px;
+  margin-top: 20px;
+
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid white;
+  outline: none;
+}
+
+.associationsDescription {
+  font-size: 14px;
+  font-weight: normal;
+  position: relative;
+  margin: 35px 20px 0 20px;
+}
+
+#pd {
+  max-height: 80px;
+  width: 90%;
+  overflow-y: scroll;
+  text-align: center;
+  margin: auto;
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0);
+  border-top: 2px solid  #191919;
+  border-radius: 0 0 10px 10px;
+}
+
+#pd:hover {
+  cursor: pointer;
+}
+
+#pd > p {
+
+}
+
+#pd > p {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

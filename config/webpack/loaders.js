@@ -88,7 +88,6 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
       customize: require.resolve(
         'babel-preset-react-app/webpack-overrides'
       ),
-
       plugins: [
         [
           require.resolve('babel-plugin-named-asset-import'),
@@ -175,5 +174,3 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 };
 
 module.exports = getLoaders;
-
-
