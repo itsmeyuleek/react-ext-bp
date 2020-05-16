@@ -2,20 +2,22 @@
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(315px,1fr));
-  grid-auto-rows: 1px;
-  margin: auto;
+  grid-auto-rows: 20px;
+  margin: 13px 30px 30px 30px;
 }
 
 .widgetsGrid:nth-child(4n+1) {
   margin-left: 20px;
 }
 
-.widgetsGrid:nth-child(4n) {
-  margin-right: 20px;
-}
 
 .widget {
-  margin-right: 20px;
+  margin-right: 0px;
+}
+
+
+.widgetsGrid .widget:nth-child(4n) {
+  margin-right: 0px;
 }
 
 .wrapper {
@@ -27,5 +29,5 @@
   /* position: absolute;
   left: 50%;
   transform: translateX(-50%); */
-  margin-left: 20px;
+  /* margin-left: 20px; */
 }

@@ -15,6 +15,7 @@ const TechStackLogos = () => {
 const Popup = () => {
   return (
     <div className="popup">
+      <p>WTF</p>
       <p className="popup-greet">Thanks for using <span className="brand">Modern extension Boilerplate</span></p>
       <p className="stack-head">Made using :</p>
       <TechStackLogos />

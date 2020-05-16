@@ -10,6 +10,7 @@ export default class Associations extends React.Component {
     super(props)
 
     this.state = {
+      userId: props.data.userId,
       where: props.where,
       name: 'Associations',
       description: 'Enter a word and get associations',
@@ -17,52 +18,36 @@ export default class Associations extends React.Component {
       words: null,
       pos: 0
     }
+  }
 
-    this.getWords = this.getWords.bind(this)
-    this.nextWord = this.nextWord.bind(this)
-    this.getCatalogInfo = this.getCatalogInfo.bind(this)
-
-    if (this.getCatalogInfo) {
-      this.getCatalogInfo();
-    }
-
-    this.userId = 0
-
-    const tthis = this
-
-    chrome.storage.sync.get(['userId'], function(result) {
-      this.userId = result.userId
-      console.log("retrieveng text")
-
+  componentDidMount = () => {
+    if (this.state.where != "catalog") {
       $.ajax({
         method: "POST",
         url: "http://localhost:3000/associations/handleText",
         dataType: "json",
         data: {
-          userId: this.userId
+          userId: this.state.userId
         }
       })
-      .done(function(data) {
-        let word = data["word"]
+      .done((data) => {
+        let word = data["word"];
         if (word != null)
         {
-          let words = data["words"].split(', ')
-          $("#word").attr('placeholder', word)
-          $("#resultAssociations").text(words[0])
-          tthis.setState({
-            ...tthis.state,
+          let words = data["words"].split(', ');
+          $("#word").attr('placeholder', word);
+          $("#resultAssociations").text(words[0]);
+          this.setState({
             word: word,
             words: words
-          })
-          tthis.props.resizeWidgets()
+          });
         }
+        this.props.widgetHasLoaded("Association");
       });
-    });
+    }
   }
 
-// готово
-  getWords() {
-    const tthis = this
+  getWords = () => {
     let word = document.getElementById("word").value
     let key = '79187b09-0830-4e0e-9087-99a6711502c8'
     let url = "https://api.wordassociations.net/associations/v1.0/json/search?apikey=" + key + "&lang=en" + "&text=" + word + "&type=response&limit=300&pos=noun"
@@ -71,72 +56,67 @@ export default class Associations extends React.Component {
       url: url,
       dataType: "json"
     })
-    .done(function(data) {
+    .done((data) => {
       let words = data['response'][0]['items']
       let words2 = new Array(words.length)
       let p = 0
       Object.values(words).map(x => {
-        words2[p] = x.item
-        p = p + 1
-      })
-      tthis.setState({
-        ...tthis.state,
+        words2[p] = x.item;
+        p = p + 1;
+      });
+      this.setState({
         word: words[0]['item'],
         words: words2,
         pos: 0
       })
-      $("#resultAssociations").text(tthis.state.words[tthis.state.pos])
-      let paragraph = ''
+      $("#resultAssociations").text(this.state.words[this.state.pos]);
+      let paragraph = '';
       for (let w of words2) {
-        paragraph = paragraph + w + ', '
+        paragraph = paragraph + w + ', ';
       }
-      tthis.props.resizeWidgets()
       $.ajax({
         method: "POST",
         url: "http://localhost:3000/associations/handleText",
         dataType: "json",
         data: {
-          userId: userId,
+          userId: this.state.userId,
           word: document.getElementById("word").value,
           words: paragraph,
         }
-      })
+      });
     })
   }
 
-  nextWord() {
-    this.setState({
-      ...this.state,
-      pos: this.state.pos + 1
-    }, () => {
-      $("#resultAssociations").text(this.state.words[this.state.pos])
-    })
-  }
-
-  getCatalogInfo() {
-    console.log('sending info')
-    return ({
-      name: this.state.name,
-      description: this.state.description,
-      bind: this.bindUser
-    })
+  nextWord = () => {
+    if (this.state.words != null) {
+      this.setState({
+        pos: this.state.pos + 1
+      }, () => {
+        $("#resultAssociations").text(this.state.words[this.state.pos])
+      });
+    }
   }
 
   render() {
-    const { updateBind, data } = this.props
+    const { updateBind, toggleHidden, data } = this.props
     let rmBtnClass = ""
     let addBtnClass = ""
     if (data !== undefined) {
       rmBtnClass = data.editable ? "removeButton is-active" : "removeButton"
-      addBtnClass = data.isBinded ? "addButton disabled" : "addButton enabled"
+      addBtnClass = data.isBinded ? "addButton remove" : "addButton enabled"
     }
+    const toBind = !data.isBinded ? true : false;
+    const toHide = !data.isHidden ? true : false;
+    const addText = data.isBinded ? "remove" : "add";
+
     return (
      this.state.where == 'catalog' ?
      (
       <div className="catalogEntry">
         <h2>{this.state.name}</h2>
         <p>{this.state.description}</p>
-        <button className={addBtnClass} disabled={data.isBinded} onClick={() => updateBind(true, 'Association')} />
+        <button className="CatalogAddButton" onClick={() => updateBind(toBind, 'Association')} >{addText}</button>
+        <button className="CatalogShowButton" disabled={toHide} onClick={() => toggleHidden('Association')}>show</button>
       </div>
     ) :
     (
@@ -152,14 +132,14 @@ export default class Associations extends React.Component {
             className={rmBtnClass}
             type="button"
             id="addAssociationsWidget"
-            onClick={() => updateBind(false, 'Association')}
+            onClick={() => toggleHidden('Association')}
           />
 
-          <h2
+        {/*  <h2
             className="associationsDescription"
           >
             Click the word to get the next one
-          </h2>
+          </h2> */}
 
         <input
           id="word"
@@ -176,7 +156,7 @@ export default class Associations extends React.Component {
           onClick={ this.getWords }>send</button>
         <div
           id="pd"
-          onClick={this.nextWord}
+          onClick={() => this.nextWord()}
         >
           <p
             id="resultAssociations">

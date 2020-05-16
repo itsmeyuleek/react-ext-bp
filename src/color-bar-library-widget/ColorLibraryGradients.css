@@ -1,0 +1,53 @@
+/* .LibraryGradientsWrapper {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+ */
+.LibraryGradientsWrapper {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.LibraryGradientsWrapper > h2 {
+  margin-top: 20px;
+  margin-left: 0px;
+}
+
+.LibraryGradients {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(2, minmax(125px,1fr));
+  grid-auto-rows: 45px;
+}
+
+.LibraryGradients > canvas:nth-child(2n) {
+}
+
+.LibraryGradientsCanvas {
+  border-radius: 4px;
+  height: 45px;
+  width: 100%;
+}
+
+.ColorLibraryGradientWrap {
+  position: relative;
+}
+
+.DeleteGradientButton {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  outline: none;
+  background: url('./x_button.png') no-repeat;
+  background-size: 100%;
+
+  display: none;
+}
+
+.DeleteGradientButton.is-active {
+  display: inherit;
+}

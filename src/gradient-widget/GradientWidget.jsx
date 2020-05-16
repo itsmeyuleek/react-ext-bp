@@ -6,30 +6,26 @@ export default class Gradient extends React.Component {
     super(props)
 
     this.state = {
+      userId: props.data.userId,
       where: props.where,
       name: 'Gradient',
-      description: 'Generate or create a linear gradient'
+      description: 'Generate or create a linear gradient',
+      colorStartNumber: "",
+      colorEndNumber: ""
     }
+  }
 
-    this.changeColor = this.changeColor.bind(this)
-    this.changeColorRandom = this.changeColorRandom.bind(this)
-
-    this.userId = 0
-    chrome.storage.sync.get(['userId'], function(result) {
-      this.userId = result.userId
-
-      console.log("retrieveng colors")
-
+  componentDidMount = () => {
+    if (this.state.where != "catalog") {
       $.ajax({
         method: "POST",
         url: "http://localhost:3000/gradient_widgets/handleColor",
         dataType: "json",
         data: {
-          userId: userId
+          userId: this.state.userId
         }
       })
-      .done(function(data) {
-        console.log(data)
+      .done((data) => {
         let startColor = data["startColor"]
         let endColor = data["endColor"]
         if (startColor != null && endColor != null)
@@ -39,74 +35,101 @@ export default class Gradient extends React.Component {
           $("#colorStartNumber").val(startColor)
           $("#colorEndNumber").val(endColor)
         }
+        this.setState({
+          colorStartNumber: startColor,
+          colorEndNumber: endColor
+        })
+        this.props.widgetHasLoaded("GradientWidget");
       });
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { colorStartNumber, colorEndNumber } = this.state;
+    const startLength = this.state.colorStartNumber && colorStartNumber.length,
+          endLength = this.state.colorEndNdNumber && colorEndNumber.length;
+    if (prevState.colorStartNumber != colorStartNumber || prevState.colorEndNumber != colorEndNumber)
+      if ((startLength == 4|| startLength == 7) && (endLength == 4 || endLength == 7))
+        this.changeColor()
+  }
+
+  handleChange = (e) => {
+    const { name, value } = e.target
+    this.setState({
+      [name]: value
     })
   }
 
-  changeColor() {
+  handleSave = () => {
+    const { getWidgetProps, setWidgetProps } = this.props.funcProps;
+    const pair = { startColor: this.state.colorStartNumber, endColor: this.state.colorEndNumber };
+    const libraryState = getWidgetProps("ColorBarLibraryWidget");
+    let gradients = libraryState.gradients.slice();
+    if (gradients.length > 5) {
+      gradients.pop();
+    }
+    gradients.unshift(pair);
+    libraryState.gradients = gradients;
+    setWidgetProps("ColorBarLibraryWidget", libraryState);
+  }
+
+  changeColor = () => {
     let startColor = document.getElementById("colorStartNumber").value
     let endColor = document.getElementById("colorEndNumber").value
 
     let lg = "linear-gradient(90deg, " + startColor + ", " + endColor + ")"
     $(".Gradient").css("background", lg)
 
-    $("#colorStartNumber").val(startColor)
-    $("#colorEndNumber").val(endColor)
-
     $.ajax({
       method: "POST",
       url: "http://localhost:3000/gradient_widgets/handleColor",
       dataType: "json",
       data: {
-        userId: userId,
+        userId: this.state.userId,
         startColor: startColor,
         endColor: endColor
-    }
+      }
     })
   }
 
-  changeColorRandom() {
+  changeColorRandom = () => {
     let startColor = "#" + Math.random().toString(16).slice(2, 8)
     let endColor = "#" + Math.random().toString(16).slice(2, 8)
-
-    // var c = document.getElementById("gradientCanvas");
-    // var ctx = c.getContext("2d");
 
     let lg = "linear-gradient(90deg, " + startColor + ", " + endColor + ")"
     $(".Gradient").css("background", lg)
 
     $("#colorStartNumber").val(startColor)
     $("#colorEndNumber").val(endColor)
-    // var grd = ctx.createLinearGradient(0, 0, c.width, 0);
-    // grd.addColorStop(0, startColor);
-    // grd.addColorStop(1, endColor);
-    //
-    // ctx.fillStyle = grd;
-    // ctx.fillRect(0, 0, c.width, c.height);
-    //
-    // document.getElementById("colorStartNumber").value = startColor;
-    // document.getElementById("colorEndNumber").value = endColor;
+
+    this.setState({
+      colorStartNumber: startColor,
+      colorEndNumber: endColor
+    })
 
     $.ajax({
       method: "POST",
       url: "http://localhost:3000/gradient_widgets/handleColor",
       dataType: "json",
       data: {
-        userId: userId,
+        userId: this.state.userId,
         startColor: startColor,
         endColor: endColor
-    }
+      }
     })
   }
 
   render() {
-    const { updateBind, data } = this.props
+    const { updateBind, toggleHidden, data } = this.props
     let rmBtnClass = ""
     let addBtnClass = ""
     if (data !== undefined) {
       rmBtnClass = data.editable ? "removeButton is-active" : "removeButton"
-      addBtnClass = data.isBinded ? "addButton disabled" : "addButton enabled"
+      addBtnClass = data.isBinded ? "addButton remove" : "addButton enabled"
     }
+    const toBind = !data.isBinded ? true : false;
+    const toHide = !data.isHidden ? true : false;
+    const addText = data.isBinded ? "remove" : "add";
 
     return (
       this.state.where == 'catalog' ?
@@ -114,7 +137,8 @@ export default class Gradient extends React.Component {
        <div className="catalogEntry">
          <h2>{this.state.name}</h2>
          <p>{this.state.description}</p>
-         <button className={addBtnClass} disabled={data.isBinded} onClick={() => updateBind(true, 'GradientWidget')} />
+         <button className="CatalogAddButton" onClick={() => updateBind(toBind, 'GradientWidget')} >{addText}</button>
+         <button className="CatalogShowButton" disabled={toHide} onClick={() => toggleHidden('GradientWidget')}>show</button>
        </div>
      ) :
      (
@@ -127,17 +151,8 @@ export default class Gradient extends React.Component {
           className={rmBtnClass}
           type="button"
           id="addWidgetGradient"
-          onClick={() => updateBind(false, 'GradientWidget')}
+          onClick={() => toggleHidden('GradientWidget')}
         />
-
-        <button
-          className="randomButton"
-          type="button"
-          id="buttonRandom"
-          onClick={ this.changeColorRandom }
-        >
-          random
-        </button>
 
         <label
           id="colorStartNumberLabel"
@@ -146,10 +161,13 @@ export default class Gradient extends React.Component {
           hex:
         </label>
         <input
+          name="colorStartNumber"
           id="colorStartNumber"
           type="text"
           placeholder="#0F0F0F"
           pattern="^#[0-9a-fA-F]{6}$"
+          onChange={(e) => this.handleChange(e)}
+          value={ this.state.colorStartNumber || "" }
         />
 
         <label
@@ -159,13 +177,16 @@ export default class Gradient extends React.Component {
           hex:
         </label>
         <input
+          name="colorEndNumber"
           id="colorEndNumber"
           type="text"
           placeholder="#0F0F0F"
           pattern="^#[0-9a-fA-F]{6}$"
+          onChange={(e) => this.handleChange(e)}
+          value={ this.state.colorEndNumber || "" }
         />
 
-
+        {/*
         <button
           className="sendButton"
           type="button"
@@ -173,6 +194,20 @@ export default class Gradient extends React.Component {
           onClick={ this.changeColor }
         >
         send
+        </button>
+        */}
+        <button
+          className="saveButton"
+          type="button"
+          onClick={() => this.handleSave()}
+        />
+        <button
+          className="randomButton"
+          type="button"
+          id="buttonRandom"
+          onClick={ this.changeColorRandom }
+        >
+          random
         </button>
       </div>
       </div>

@@ -1,109 +1,124 @@
 import React from 'react'
 import $ from 'jquery'
 
-import ColorLibrarySquare from './ColorLibrarySquare'
+import ColorLibraryColors from './ColorLibraryColors'
+import ColorLibraryGradients from './ColorLibraryGradients'
+import ColorLibraryPalettes from './ColorLibraryPalettes'
 
 export default class ColorLibrary extends React.Component {
   constructor(props) {
     super(props)
 
-    this.componentDidUpdate = this.componentDidUpdate.bind(this)
+    this.state = {
+      userId: props.data.userId,
+      where: props.where,
+      name: 'Library',
+      description: 'Store colors from color-type widgets',
+      colors: props.where != 'catalog' ? props.data.widgets.ColorBarLibraryWidget.colors : [],
+      gradients: props.where != 'catalog' ? props.data.widgets.ColorBarLibraryWidget.gradients : [],
+      palettes: props.where != 'catalog' ? props.data.widgets.ColorBarLibraryWidget.palettes : []
+    }
+  }
 
-    props.where !== 'catalog' ?
-      this.state = {
-        where: props.where,
-        name: 'Color library',
-        description: 'Store colors from Color widget',
-        colors: props.widgetData.colors,
-      }
-    :
-      this.state = {
-        where: props.where,
-        name: 'Color library',
-        description: 'Store colors from Color widget',
-      }
-
-    this.userId = 0
-    const self = this
-    chrome.storage.sync.get(['userId'], function(result) {
-      this.userId = result.userId
+  componentDidMount = () => {
+    if (this.state.where != "catalog") {
+      // $.ajax({
+      //   method: "POST",
+      //   url: "http://localhost:3000/color_bar_library_widgets/checkUser",
+      //   dataType: "json",
+      //   data: {
+      //     userId: this.state.userId
+      //   }
+      // })
+      // .done((data) => {
+      //   let isAdded = data['isAdded']
+      //   if (isAdded == '0') {
+      //     $('#bindColorLibrary').attr('disabled', 'disabled');
+      //     $('#addColorToLibrary').attr('disabled', 'disabled');
+      //   }
+      //   else {
+      //     $('#bindColorLibrary').removeAttr('disabled');
+      //     $('#addColorToLibrary').removeAttr('disabled');
+      //   }
+      // });
 
       $.ajax({
-        method: "POST",
-        url: "http://localhost:3000/color_bar_library_widgets/checkUser",
-        dataType: "json",
-        data: {
-          userId: this.userId
-        }
-      })
-      .done(function(data) {
-        let isAdded = data['isAdded']
-        if (isAdded == '0') {
-          $('#bindColorLibrary').attr('disabled', 'disabled');
-          $('#addColorToLibrary').attr('disabled', 'disabled');
-        }
-        else {
-          $('#bindColorLibrary').removeAttr('disabled');
-          $('#addColorToLibrary').removeAttr('disabled');
-        }
-      });
-
-      console.log('GET COLORS FOR LIBRARY')
-      $.ajax({
-        method: "POST",
+        method: "GET",
         url: "http://localhost:3000/color_bar_library_widgets/retrieveColors",
         dataType: "json",
         data: {
-          userId: this.userId
+          userId: this.state.userId
         }
       })
-      .done(function(data) {
-        console.log('COLORS FOR LIBRARY', data)
-        let result = data['result']
-        if (result == '1') {
-          if (data['colors'] !== null && data['colors'].length > 0) {
-            let colors = data['colors']
-            if (props.where !== 'catalog') {
-              self.setState({
-                colors: colors
-              })
-              self.props.addColorsToColorLibrary(colors)
-              self.props.resizeWidgets()
+      .done((data) => {
+        let result = data['result'];
+        if (result == '0') {
+            if (this.state.where !== 'catalog') {
+              this.setState({
+                colors: data['colors'] != null ? data['colors'] : [],
+                gradients: data['gradients'] != null ? data['gradients'] : [],
+                palettes: data['palettes'] != null ? data['palettes'] : []
+              });
+              this.props.addToLibrary.addColorsToColorLibrary(data['colors']);
+              this.props.addToLibrary.addGradientsToColorLibrary(data['gradients']);
+              this.props.addToLibrary.addPalettesToColorLibrary(data['palettes']);
             }
-          }
         }
+        this.props.widgetHasLoaded("ColorBarLibraryWidget");
       });
-    });
+    }
   }
 
-  componentDidUpdate() {
-    $.ajax({
-      method: "POST",
-      url: "http://localhost:3000/color_bar_library_widgets/addColor",
-      dataType: "json",
-      data: {
-        userId: userId,
-        colors: this.state.colors
+  static getDerivedStateFromProps(props, state) {
+    if (props.where != 'catalog') {
+      const saved = Object.assign({}, props.data.widgets.ColorBarLibraryWidget);
+      let newState = {
+        colors: state.colors,
+        gradients: state.gradients,
+        palettes: state.palettes
+      };
+      if (JSON.stringify(saved.colors) !== JSON.stringify(state.colors)) {
+        newState.colors = saved.colors;
       }
-    })
+      if (JSON.stringify(saved.gradients) !== JSON.stringify(state.gradients)) {
+        newState.gradients = saved.gradients;
+      }
+      if (JSON.stringify(saved.palettes) !== JSON.stringify(state.palettes)) {
+        newState.palettes = saved.palettes;
+      }
+      return newState;
+    } else {
+      return null;
+    }
+  }
+
+  componentDidUpdate = () => {
+    if (this.state.where != 'catalog') {
+      $.ajax({
+        method: "POST",
+        url: "http://localhost:3000/color_bar_library_widgets/addColor",
+        dataType: "json",
+        data: {
+          userId: this.state.userId,
+          colors: this.state.colors,
+          gradients: this.state.gradients,
+          palettes: this.state.palettes
+        }
+      })
+    }
   }
 
   render() {
-    const { updateBind, data } = this.props
+    const { updateBind, toggleHidden, data } = this.props
     let rmBtnClass = ""
     let addBtnClass = ""
     if (data !== undefined) {
       rmBtnClass = data.editable ? "removeButton is-active" : "removeButton"
-      addBtnClass = data.isBinded ? "addButton disabled" : "addButton enabled"
+      addBtnClass = data.isBinded ? "addButton remove" : "addButton enabled"
     }
-
-    var colorSquares = []
-    if (this.state.where !== 'catalog') {
-      colorSquares = this.state.colors.slice(0).reverse().map((color, idx) => {
-        return <ColorLibrarySquare key={idx} idx={idx} color={color} deleteColorFromColorLibrary={this.props.deleteColorFromColorLibrary}/>
-      })
-    }
-
+    const toBind = !data.isBinded ? true : false;
+    const toHide = !data.isHidden ? true : false;
+    const addText = data.isBinded ? "remove" : "add";
 
     return (
       this.state.where == 'catalog' ?
@@ -111,7 +126,8 @@ export default class ColorLibrary extends React.Component {
        <div className="catalogEntry">
          <h2>{this.state.name}</h2>
          <p>{this.state.description}</p>
-         <button className={addBtnClass} disabled={data.isBinded} onClick={() => updateBind(true, 'ColorBarLibraryWidget')} />
+         <button className="CatalogAddButton" onClick={() => updateBind(toBind, 'ColorBarLibraryWidget')} >{addText}</button>
+         <button className="CatalogShowButton" disabled={toHide} onClick={() => toggleHidden('ColorBarLibraryWidget')}>show</button>
        </div>
      ) :
      (
@@ -120,23 +136,24 @@ export default class ColorLibrary extends React.Component {
       <div
         className="widget ColorLibrary"
       >
-        <h1>{this.state.name}</h1>
-        <h2>
-          Your colors from color widget
-        </h2>
         <button
           className={rmBtnClass}
-          onClick={() => updateBind(false, 'ColorBarLibraryWidget')}
+          type="button"
+          id="addWidgetColorLibrary"
+          onClick={() => toggleHidden('ColorBarLibraryWidget')}
         />
+        <h1>{this.state.name}</h1>
+        <ColorLibraryColors colors={ this.state.colors != null ? this.state.colors : [] } delete={ this.props.deleteFunc.color } />
         <div
-          id="SavedFromColorWidget"
-          className="SavedFromColorWidget"
-        >
-          {colorSquares}
-        </div>
+          className="LibraryBreak"
+        />
+        <ColorLibraryGradients gradients={ this.state.gradients } delete={ this.props.deleteFunc.gradient } />
+        <div
+          className="LibraryBreak"
+        />
+        <ColorLibraryPalettes palettes={ this.state.palettes } delete={ this.props.deleteFunc.palette } />
       </div>
       </div>
-
     )
   )
   }

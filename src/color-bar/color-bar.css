@@ -55,8 +55,8 @@
 
 .Color > .sendButton, .saveButton {
   padding: 5px;
-  background-color: rgba(0, 0, 0, 0);
-  border: 1px solid white;
+  /* background-color: rgba(0, 0, 0, 0); */
+  /* border: 1px solid white; */
   outline: none;
   bottom: 20px;
 
@@ -69,7 +69,11 @@
 }
 
 .Color > .saveButton {
-  left: 80px;
+  margin-left: 20px;
+  width: 24px;
+  height: 24px;
+  background: url(".././img/save.png") no-repeat;
+  background-size: 100%;
 }
 
 .Color > label {

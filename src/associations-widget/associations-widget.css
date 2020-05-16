@@ -18,11 +18,10 @@
 }
 
 .Associations > input {
-  margin: 20px 20px 30px 20px;
+  margin: 20px 20px 0 20px;
   background-color: rgba(0, 0, 0, 0);
   border: 0;
   color: white;
-  margin: 10px 0 20px 20px;
   width: 110px;
   outline: none;
   font-size: 16px;
@@ -34,14 +33,14 @@
 }
 
 .Associations > .sendButton {
-  padding: 5px;
-  margin-left: 40px;
+  margin-right: 20px;
   margin-top: 20px;
 
-  padding: 5px;
+  padding: 5px 10px 5px 10px;
   background-color: rgba(0, 0, 0, 0);
   border: 1px solid white;
   outline: none;
+  float: right;
 }
 
 .associationsDescription {
@@ -58,7 +57,7 @@
   text-align: center;
   margin: auto;
   margin-top: 20px;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 20px;
   background-color: rgba(0, 0, 0, 0);
   border-top: 2px solid  #191919;

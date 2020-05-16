@@ -1,0 +1,56 @@
+.ColorPalette {
+  position: relative;
+  /* background-color: #fbfbfb; */
+  background-color: #0F0F0F;
+  border-radius: 10px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,.3);
+  height: 175px;
+}
+
+.ColorPalette > h1 {
+  position: relative;
+  top: 15px;
+  margin-left: 20px;
+}
+
+.ColorPalette > input {
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  color: white;
+  margin-left: 20px;
+  margin-top: 10px;
+  /* margin: 10px 0 20px 10px; */
+  width: 75px;
+  outline: none;
+  font-size: 16px;
+  font-weight: 500;
+
+  /* position: absolute;
+  top: 45%; */
+  left: 10px;
+}
+
+.PaletteSelect {
+  position: relative;
+  height: 24px;
+  margin-left: 20px;
+  margin-top: 20px;
+
+  background-color: rgba(0,0,0,0);
+  color: white;
+  outline: none;
+}
+
+.PaletteSelect > option {
+  background-color: rgba(0,0,0,0);
+}
+
+.ColorPalette > .saveButton {
+  margin-left: 20px;
+  position: relative;
+  top: 0px;
+  width: 24px;
+  height: 24px;
+  background: url(".././img/save.png") no-repeat;
+  background-size: 100%;
+}

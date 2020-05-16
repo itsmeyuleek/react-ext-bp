@@ -1,0 +1,28 @@
+.PaletteLineWrap {
+  margin-top: 17px;
+}
+
+.PaletteLine {
+  display: grid;
+  grid-gap: 0px;
+  grid-template-columns: repeat(5, 20%);
+  grid-auto-rows: 70px;
+
+  border-radius: 10px;
+}
+
+.PaletteSquare:nth-child(5n+1) {
+  border-radius: 0 0 0 10px;
+  /* margin-left: auto; */
+}
+
+.PaletteSquare:nth-child(5n) {
+  border-radius: 0 0 10px 0;
+  /* margin-right: auto; */
+}
+
+.PaletteSquare {
+  background-color: #b1b1b1;
+  /* border-radius: 4px; */
+  border-style: none;
+}

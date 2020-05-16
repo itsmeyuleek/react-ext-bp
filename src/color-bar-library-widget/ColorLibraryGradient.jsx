@@ -1,21 +1,23 @@
 import React from 'react'
 import $ from 'jquery'
 
-export default class ColorLibrarySquare extends React.Component {
+import './ColorLibraryGradients.css'
+
+export default class ColorLibraryGradient extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
       idx: props.idx,
-      color: props.color,
+      colors: props.colors,
       isMouseInside: false
     }
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.color !== state.color) {
+    if (JSON.stringify(props.colors) !== JSON.stringify(state.colors)) {
       return {
-        color: props.color
+        colors: props.colors
       }
     }
     return null;
@@ -33,11 +35,12 @@ export default class ColorLibrarySquare extends React.Component {
     })
   }
 
-  copyColor = () => {
+  copyGradient = () => {
     // копирование
     const el = document.createElement('textarea')
     el.className = 'TextToCopy'
-    el.value = this.state.color
+    const pair = this.state.colors
+    el.value = "linear-gradient(90deg, " + pair.startColor + " 0%, " + pair.endColor + " 100%)"
     el.setAttribute('readonly', '')
     document.body.appendChild(el)
     const selected =
@@ -59,19 +62,21 @@ export default class ColorLibrarySquare extends React.Component {
   }
 
   render() {
+    const pair = this.state.colors;
     const style = {
-      backgroundColor: this.state.color
+      background: "linear-gradient(90deg, " + pair.startColor + " 0%, " + pair.endColor + " 100%)"
     }
-    const buttonClass = this.state.isMouseInside ? "DeleteColorButton is-active" : "DeleteColorButton"
+    const buttonClass = this.state.isMouseInside ? "DeleteGradientButton is-active" : "DeleteGradientButton"
+
 
     return(
-      <div key={this.state.idx} className="ColorLibrarySquareWrap">
+      <div key={this.state.idx} className="ColorLibraryGradientWrap">
         <canvas
-          className="SavedColor"
+          className="LibraryGradientsCanvas"
           style={style}
           onMouseEnter={this.mouseEnter}
           onMouseLeave={this.mouseLeave}
-          onClick={this.copyColor}
+          onClick={this.copyGradient}
         />
         <button
           className={buttonClass}

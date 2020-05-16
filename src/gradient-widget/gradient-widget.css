@@ -1,4 +1,5 @@
 .Gradient {
+  margin-top: 17px;
   height: 175px;
   position: relative;
   background-color: #0F0F0F;
@@ -15,9 +16,34 @@
 }
 
 .Gradient > h1 {
+  display: inline;
   position: relative;
   top: 15px;
   margin-left: 20px;
+}
+
+.Gradient > .saveButton {
+  position: absolute;
+  left: 20px;
+  width: 24px;
+  height: 24px;
+  background: url(".././img/save.png") no-repeat;
+  background-size: 100%;
+}
+
+.Gradient > .gradientShowCopyWindow {
+  display: inline;
+  position: absolute;
+  margin-top: 20px;
+  margin-left: 20px;
+  height: 24px;
+  width: 76px;
+
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid white;
+  outline: none;
+  /* background: url(".././img/dropArrow.png") no-repeat;
+  background-size: 100%; */
 }
 
 .Gradient > .sendButton, .randomButton {
@@ -25,18 +51,19 @@
  background-color: rgba(0, 0, 0, 0);
  border: 1px solid white;
  outline: none;
- bottom: 20px;
 
  position: absolute;
  bottom: 20px;
+ height: 24px;
 }
 
-.Gradient > .sendButton {
-  left: 20px;
-}
+/* .Gradient > .sendButton {
+  left: 24px;
+} */
 
 .Gradient > .randomButton {
-  left: 80px;
+  left: 64px;
+  padding: 5px 10px 5px 10px;
 }
 
 .Gradient > input {
@@ -76,4 +103,13 @@
 
 #colorEndNumberLabel {
   right: calc(20px + 70px + 20px);
+}
+
+.CopyGradientWindow {
+  display: none;
+  padding: 10px;
+  background-color: black;
+  border-radius: 2px;
+  border-color: white;
+  border-width: 2px;
 }

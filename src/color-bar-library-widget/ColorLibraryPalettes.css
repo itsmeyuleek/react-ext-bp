@@ -1,0 +1,54 @@
+.LibraryPalettesWrapper {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-bottom: 20px;
+}
+
+.LibraryPalettesWrapper > h2 {
+  margin-top: 20px;
+  margin-left: 0px;
+}
+
+.LibraryPalettes {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(1, minmax(125px,1fr));
+  grid-auto-rows: 45px;
+}
+
+.LibraryPalettes .PaletteLineWrap {
+  margin-top: 0px;
+}
+
+.LibraryPalettes .PaletteLine {
+}
+
+.LibraryPalettes .PaletteSquare {
+  height: 45px;
+}
+
+.LibraryPalettes .PaletteSquare:nth-child(5n+1) {
+  border-radius: 4px 0 0 4px;
+}
+
+.LibraryPalettes .PaletteSquare:nth-child(5n) {
+  border-radius: 0 4px 4px 0;
+}
+
+.DeletePaletteButton {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  outline: none;
+  background: url('./x_button.png') no-repeat;
+  background-size: 100%;
+
+  display: none;
+}
+
+.DeletePaletteButton.is-active {
+  display: inherit;
+}
